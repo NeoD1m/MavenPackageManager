@@ -17,20 +17,15 @@ public class download {
     download(String name,String ver){
 
         String urlSearch = "https://mvnrepository.com/search?q=";
-
         String nameCorrected = name.replaceAll(" ","+");
         Element doc = getPageBody(urlSearch + nameCorrected); // Full page URL here
 
         Element link = doc.select("a:contains(" + name + ")").get(0);
         String fullLink = link.attr("href");
-        //System.out.println(fullLink);
-        Element doc1 = getPageBody("https://mvnrepository.com" + fullLink + "/" + ver);
-        //System.out.println("https://mvnrepository.com" + fullLink + "/" + ver);
 
+        Element doc1 = getPageBody("https://mvnrepository.com" + fullLink + "/" + ver);
         Element linkToVer = doc1.select("a:contains(jar)").get(0);
-        //System.out.println(linkToVer);
         String linkToDownload = linkToVer.attr("href");
-        //System.out.println(linkToDownload);
         DownloadFile(linkToDownload,"src/jars/" + name + " v" + ver + ".jar" );
     }
 

@@ -1,17 +1,15 @@
 package com.company;
 
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
 
     public static String pathToPom;
-    private static boolean debugMode = true;
+    private static boolean debugMode = false;
     private static String name;
     private static String ver;
-    //String unzipPath = "C:\\Users\\Dima\\IdeaProjects\\PackageManager\\src\\unzip";
     public static void main(String[] args) throws IOException {
         Scanner inputScanner = new Scanner(System.in);
         System.out.println("MAVEN package manager");
@@ -34,38 +32,44 @@ public class Main {
         newFolder.mkdir();
         unzip lol = new unzip("src/jars/" + name + " v" + ver + ".jar",unzipPath);
         findFile("pom.xml",newFolder);
-        System.out.println(pathToPom);
-        //System.out.println(findFile("pom.xml",newFolder));
-
+        getListOfDependencies(pathToPom);
 
     }
 
-    public static void  findFile(String name, File file)
-    {
+    public static void  findFile(String name, File file) {
         File temp = null;
         File[] list = file.listFiles();
-        if(list!=null)
-            for (File fil : list)
-            {
-                if (fil.isDirectory())
-                {
-                    //System.out.println("1");
-                   findFile(name,fil);
-                }
-                else if (name.equalsIgnoreCase(fil.getName()))
-                {
-                    //System.out.println("2");
-                    //System.out.println(fil.getParentFile());
+        if (list != null)
+            for (File fil : list) {
+                if (fil.isDirectory()) {
+                    findFile(name, fil);
+                } else if (name.equalsIgnoreCase(fil.getName())) {
                     temp = fil.getParentFile();
-                    //return fil.getParentFile().toString();
                 }
+                if (temp != null)
+                    pathToPom = temp.toString();
             }
-        //System.out.println("3");
-        //System.out.println(temp);
-        if (temp != null)
-            pathToPom = temp.toString();
     }
 
+    public static void getListOfDependencies(String pathToPom) throws IOException {
+        BufferedReader reader;
+        reader = new BufferedReader(new FileReader(pathToPom + "/pom.xml"));
+        String line = reader.readLine();
+
+        while (!line.contains("<dependencies>")){
+            line = reader.readLine();
+        }
+
+        while (!line.equals("</project>")){
+            line = reader.readLine();
+            if (line.contains("<artifactId>")){
+                line = line.replace("            <artifactId>","");
+                line = line.replace("</artifactId>","");
+                System.out.println(line);
+            }
+        }
+
+    }
 
 
 }
