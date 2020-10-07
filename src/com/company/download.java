@@ -23,15 +23,15 @@ public class download {
 
         Element link = doc.select("a:contains(" + name + ")").get(0);
         String fullLink = link.attr("href");
-
+        //System.out.println(fullLink);
         Element doc1 = getPageBody("https://mvnrepository.com" + fullLink + "/" + ver);
-        System.out.println("https://mvnrepository.com" + fullLink + "/" + ver);
+        //System.out.println("https://mvnrepository.com" + fullLink + "/" + ver);
 
         Element linkToVer = doc1.select("a:contains(jar)").get(0);
-
+        //System.out.println(linkToVer);
         String linkToDownload = linkToVer.attr("href");
-        //System.out.print(linkToDownload);
-        DownloadFile(linkToDownload,"C:\\Users\\Dima\\IdeaProjects\\PackageManager\\src\\jars\\" + name + " v" + ver + ".jar" );
+        //System.out.println(linkToDownload);
+        DownloadFile(linkToDownload,"src/jars/" + name + " v" + ver + ".jar" );
     }
 
     public static Element getPageBody(String url){
