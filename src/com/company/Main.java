@@ -24,6 +24,12 @@ public class Main {
             name = "Tlog Core";
             ver = "1.1.1";
         }
+
+        get(name,ver);
+
+    }
+
+    public static void get(String name, String ver) throws IOException {
         download jar = new download(name,ver);
 
         String unzipPath = "src/unzip/" + name + " v" + ver;
@@ -33,7 +39,6 @@ public class Main {
         unzip lol = new unzip("src/jars/" + name + " v" + ver + ".jar",unzipPath);
         findFile("pom.xml",newFolder);
         getListOfDependencies(pathToPom);
-
     }
 
     public static void  findFile(String name, File file) {
@@ -63,9 +68,13 @@ public class Main {
         while (!line.equals("</project>")){
             line = reader.readLine();
             if (line.contains("<artifactId>")){
-                line = line.replace("            <artifactId>","");
+                line = line.replace(" ","");
+                line = line.replace("<artifactId>","");
                 line = line.replace("</artifactId>","");
                 System.out.println(line);
+                //if (line == "javassist") get(line,"3.27.0-GA"); else
+                //get(line,"1.0");
+
             }
         }
 
