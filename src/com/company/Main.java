@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static String pathToPom;
+    public static String pathToPom = null;
     private static boolean debugMode = false;
     private static String name;
     private static String ver;
@@ -16,29 +16,26 @@ public class Main {
         System.out.println("Input name of the package");
         if (!debugMode)
         name = inputScanner.nextLine();
-        System.out.println("Input version of the package");
-        if (!debugMode)
-        ver = inputScanner.nextLine();
 
-        if (debugMode){
+        if (debugMode)
             name = "Tlog Core";
-            ver = "1.1.1";
-        }
 
         get(name,ver);
 
     }
 
     public static void get(String name, String ver) throws IOException {
-        download jar = new download(name,ver);
+        download jar = new download(name);
 
-        String unzipPath = "src/unzip/" + name + " v" + ver;
+        String unzipPath = "src/unzip/" + name;
 
         File newFolder = new File(unzipPath);
         newFolder.mkdir();
-        unzip lol = new unzip("src/jars/" + name + " v" + ver + ".jar",unzipPath);
+        unzip lol = new unzip("src/jars/" + name + ".jar",unzipPath);
         findFile("pom.xml",newFolder);
-        getListOfDependencies(pathToPom);
+        if (pathToPom != null) {
+            getListOfDependencies(pathToPom);
+        } else System.out.println("no dependencies");
     }
 
     public static void  findFile(String name, File file) {
@@ -72,13 +69,8 @@ public class Main {
                 line = line.replace("<artifactId>","");
                 line = line.replace("</artifactId>","");
                 System.out.println(line);
-                //if (line == "javassist") get(line,"3.27.0-GA"); else
-                //get(line,"1.0");
-
             }
         }
 
     }
-
-
 }
