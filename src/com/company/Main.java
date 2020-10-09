@@ -7,9 +7,8 @@ import java.util.Scanner;
 public class Main {
 
     public static String pathToPom = null;
-    private static boolean debugMode = false;
+    private static boolean debugMode = true;
     private static String name;
-    private static String ver;
     public static void main(String[] args) throws IOException {
         Scanner inputScanner = new Scanner(System.in);
         System.out.println("MAVEN package manager");
@@ -20,11 +19,10 @@ public class Main {
         if (debugMode)
             name = "Tlog Core";
 
-        get(name,ver);
-
+        get(name);
     }
 
-    public static void get(String name, String ver) throws IOException {
+    public static void get(String name) throws IOException {
         download jar = new download(name);
 
         String unzipPath = "src/unzip/" + name;
@@ -32,6 +30,7 @@ public class Main {
         File newFolder = new File(unzipPath);
         newFolder.mkdir();
         unzip lol = new unzip("src/jars/" + name + ".jar",unzipPath);
+        pathToPom=null;
         findFile("pom.xml",newFolder);
         if (pathToPom != null) {
             getListOfDependencies(pathToPom);
@@ -55,22 +54,35 @@ public class Main {
 
     public static void getListOfDependencies(String pathToPom) throws IOException {
         BufferedReader reader;
+        BufferedReader safeReader;
         reader = new BufferedReader(new FileReader(pathToPom + "/pom.xml"));
+        safeReader = new BufferedReader(new FileReader(pathToPom + "/pom.xml"));
         String line = reader.readLine();
+        String kek = safeReader.readLine();
+        boolean lol = false;
+        while (!kek.contains("</project>")){
+            kek = safeReader.readLine();
+            if (kek.contains("<dependencies>")){
 
-        while (!line.contains("<dependencies>")){
-            line = reader.readLine();
-        }
+                while (!line.contains("<dependencies>")) {
+                    line = reader.readLine();
+                }
+                while (!line.equals("</project>")){
+                    line = reader.readLine();
+                    if (line.contains("<artifactId>")){
+                        line = line.replace(" ","");
+                        line = line.replace("<artifactId>","");
+                        line = line.replace("</artifactId>","");
+                        System.out.println(line);
+                        get(line);
 
-        while (!line.equals("</project>")){
-            line = reader.readLine();
-            if (line.contains("<artifactId>")){
-                line = line.replace(" ","");
-                line = line.replace("<artifactId>","");
-                line = line.replace("</artifactId>","");
-                System.out.println(line);
+                        lol = true;
+                    }
+                }
+                break;
             }
+            if (lol &&  (kek.contains("</project>")))
+             System.out.println("no dependencies");
         }
-
     }
 }

@@ -10,9 +10,10 @@ import java.util.zip.ZipInputStream;
 
 public class unzip {
 
-    private static final int BUFFER_SIZE = 4096;
+    private static int BUFFER_SIZE = 4096;
 
     public unzip(String zipFilePath, String destDirectory) throws IOException {
+        BUFFER_SIZE = 4096;
         File destDir = new File(destDirectory);
         if (!destDir.exists()) {
             destDir.mkdir();
@@ -28,6 +29,7 @@ public class unzip {
                 dir.mkdirs();
             }
             zipIn.closeEntry();
+            //System.out.println(entry);
             entry = zipIn.getNextEntry();
         }
         zipIn.close();
@@ -40,6 +42,7 @@ public class unzip {
         while ((read = zipIn.read(bytesIn)) != -1) {
             bos.write(bytesIn, 0, read);
         }
+
         bos.close();
     }
 }

@@ -28,11 +28,18 @@ public class download {
 
         Element linkToPAge = doc2.select("a[href*="+ nameLink +"/]").get(1);
         String linkKek = linkToPAge.attr("href");
+
         String shortFullLink = fullLink.substring(0,fullLink.lastIndexOf("/"));
+        System.out.println(linkKek);
         Element doc1 = getPageBody("https://mvnrepository.com"+ shortFullLink + "/" + linkKek);
-        Element linkToVer = doc1.select("a:contains(jar)").get(0);
-        String linkToDownload = linkToVer.attr("href");
-        DownloadFile(linkToDownload,"src/jars/" + name + ".jar");
+        System.out.println("https://mvnrepository.com"+ shortFullLink + "/" + linkKek);
+        //try {
+            Element linkToVer = doc1.select("a:contains(jar)").get(0);
+            String linkToDownload = linkToVer.attr("href");
+            System.out.println(linkToDownload);
+            DownloadFile(linkToDownload,"src/jars/" + name + ".jar");
+        //} catch (Throwable t) {}
+
 
 
     }
